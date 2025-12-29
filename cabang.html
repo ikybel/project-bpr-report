@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Cabang - BPR NTB</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content" style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+            <h3>Cabang: <span id="displayLoc"></span></h3>
+            <button onclick="logout()" style="background:#dc3545; width:auto; padding:5px 15px;">Logout</button>
+        </div>
+    </header>
+
+    <div class="box" style="max-width: 600px; margin: 20px auto;">
+        <h3>Form Laporan Gangguan</h3>
+        <form id="reportForm">
+            <input id="name" placeholder="Nama Pelapor" required>
+            <input id="nrp" placeholder="NRP" required>
+            <input id="phone" placeholder="Nomor Telpon" required>
+            <textarea id="description" placeholder="Jelaskan gangguan yang terjadi..." rows="4" required></textarea>
+            
+            <label>Prioritas:</label>
+            <select id="priority">
+                <option>Rendah</option><option>Sedang</option><option>Tinggi</option>
+            </select>
+            
+            <label>Estimasi Perbaikan:</label>
+            <select id="eta">
+                <option>1 Jam</option><option>4 Jam</option><option>1 Hari</option>
+            </select>
+            
+            <button type="submit">Kirim Laporan</button>
+        </form>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+    <script>
+        document.getElementById('displayLoc').innerText = localStorage.getItem('loc');
+        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Pusat - BPR NTB</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="header-content" style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+            <h3>Monitoring IT Pusat</h3>
+            <button onclick="logout()" style="background:#dc3545; width:auto; padding:5px 15px;">Logout</button>
+        </div>
+    </header>
+
+<div class="box">
+    <h3>Daftar Gangguan Masuk</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Asal Cabang</th>
+                <th>Deskripsi Gangguan</th> <th>Prioritas</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
+</div>
+
+    <div id="chatSection" class="box" style="display:none; border-top: 4px solid #0C3B72;">
+        <h3>Obrolan Laporan #<span id="reportIdDisplay"></span></h3>
+        <div id="chatBox" class="chat-box"></div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+            <input id="chatInput" placeholder="Ketik pesan balasan...">
+            <button onclick="sendChat()" style="width:100px;">Kirim</button>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+    <script>
+        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
+        // Override openChat untuk menampilkan ID di teks
+        const originalOpenChat = openChat;
+        openChat = (id) => {
+            document.getElementById('reportIdDisplay').innerText = id;
+            originalOpenChat(id);
+        }
+    </script>
+</body>
+</html>
