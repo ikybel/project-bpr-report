@@ -6,30 +6,41 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-    <div class="box" style="max-width:400px; margin: 100px auto;">
-        <h2 style="text-align:center; color:#0C3B72;">Sistem Pelaporan</h2>
-        <p style="text-align:center; color:#777;">PT BPR NTB (Perseroda)</p>
-        <hr>
-        <label>Role User:</label>
-        <select id="role">
-            <option value="cabang">Unit Cabang</option>
-            <option value="pusat">IT Pusat (Admin)</option>
-        </select>
-        <input id="loc" placeholder="Nama Cabang (Isi jika login cabang)">
-        <button onclick="handleLogin()">Masuk Ke Sistem</button>
-    </div>
+<div class="box" style="max-width:400px; margin: 100px auto; text-align: center;">
+    <h2 style="color:#0C3B72;">Login IT Helpdesk</h2>
+    <p>PT BPR NTB (Perseroda)</p>
+    <hr>
+    <input type="email" id="email" placeholder="Masukkan Email Kantor (@bprntb.co.id)" required>
+    <button onclick="handleLogin()" style="margin-top:10px;">Masuk</button>
+    <p id="msg" style="color:red; margin-top:10px; font-size: 14px;"></p>
+</div>
 
-    <script>
-        function handleLogin() {
-            const role = document.getElementById('role').value;
-            const loc = document.getElementById('loc').value;
+<script>
+async function handleLogin() {
+    const email = document.getElementById('email').value.trim();
+    const msg = document.getElementById('msg');
+    
+    if(!email) return alert("Email wajib diisi!");
 
-            if (role === 'cabang' && !loc) return alert("Mohon isi nama cabang!");
-            
-            localStorage.setItem('role', role);
-            localStorage.setItem('loc', loc || 'Kantor Pusat');
-            window.location.href = role + '.html';
-        }
-    </script>
+    const res = await fetch('api/auth.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ email })
+    });
+    
+    const result = await res.json();
+
+    if (result.status === 'success') {
+        // Simpan data identitas ke browser
+        localStorage.setItem('role', result.role);
+        localStorage.setItem('loc', result.nama_kantor);
+        
+        // Lempar ke halaman yang sesuai
+        window.location.href = result.role + '.html';
+    } else {
+        msg.innerText = result.message;
+    }
+}
+</script>
 </body>
 </html>
