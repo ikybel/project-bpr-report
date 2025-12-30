@@ -2,21 +2,20 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Pusat - BPR NTB</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>Panel Pusat - BPR NTB</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
     <header>
-        <div class="header-content" style="width:100%; display:flex; justify-content:space-between; align-items:center;">
+        <div class="header-content" style="width:100%; display:flex; justify-content:space-between; align-items:center; padding: 10px 20px; box-sizing: border-box;">
             <h3>Monitoring IT Pusat</h3>
-            <button onclick="logout()" style="background:#dc3545; width:auto; padding:5px 15px;">Logout</button>
+            <button onclick="logout()" style="background:#dc3545; color: white; border: none; border-radius: 5px; width:auto; padding:5px 15px; cursor: pointer;">Logout</button>
         </div>
     </header>
 
-<div class="container" style="padding: 20px;">
-        <div class="box">
-            <h3>Semua Laporan Masuk</h3>
-            <table>
+    <div class="container" style="padding: 20px;">
+        <div class="table-container"> <h3 style="margin-top:0;">Semua Laporan Masuk</h3>
+            <table class="pusat-container">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -26,19 +25,31 @@
                         <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody"></tbody> </table>
+                <tbody id="tableBody"></tbody> 
+            </table>
             <div id="pagination"></div>
         </div>
     </div>
 
-    <div id="chatSection" class="box" style="display:none; position: fixed; bottom: 0; right: 100px; width: 350px; z-index: 101;">
-        <h4>Chat Laporan #<span id="reportIdDisplay"></span></h4>
-        <div id="chatBox" class="chat-box" style="height: 200px;"></div>
-        <div style="display:flex; gap:5px; margin-top:5px;">
-            <input id="chatInput" placeholder="Ketik balasan...">
-            <button onclick="sendChat()" style="width:auto;">Kirim</button>
+    <div id="chatSection">
+        <div class="chat-container">
+            <div class="chat-header">
+                <strong>Chat Laporan #<span id="reportIdDisplay"></span></strong>
+                <span onclick="document.getElementById('chatSection').style.display='none'" style="cursor:pointer; font-size:24px;">&times;</span>
+            </div>
+
+            <div id="chatBox">
+                </div>
+
+            <div class="chat-footer">
+                <input id="chatInput" placeholder="Ketik balasan..." autocomplete="off">
+                <button class="btn-kirim" onclick="sendChat()">Kirim</button>
+            </div>
+
+            <div class="btn-tutup-bawah">
+                <button onclick="document.getElementById('chatSection').style.display='none'" style="background:none; color:red; border:none; cursor:pointer; width:100%; font-size:14px; font-weight: bold;">Tutup Chat</button>
+            </div>
         </div>
-        <button onclick="document.getElementById('chatSection').style.display='none'" style="background:none; color:red; border:none; cursor:pointer; width:100%; font-size:12px;">Tutup Chat</button>
     </div>
 
 <script src="assets/js/app.js"></script>
@@ -53,6 +64,13 @@
     function logout() { 
         localStorage.clear(); 
         window.location.href = 'index.html'; 
+    }
+
+    // Fungsi tambahan buat buka modal agar flexbox-nya jalan di HP
+    function openChat(id) {
+        document.getElementById('reportIdDisplay').innerText = id;
+        document.getElementById('chatSection').style.display = 'block'; 
+        // Panggil fungsi render chat lu di sini
     }
 </script>
 </body>
