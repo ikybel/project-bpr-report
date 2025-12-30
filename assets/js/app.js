@@ -123,15 +123,18 @@ async function loadData() {
 
                 return `
                 <tr>
-                    <td>#${r.id}</td>
-                    ${role === 'pusat' ? `<td><b>${r.location}</b><br><small>${r.name}</small></td>` : `<td>${r.created_at}</td>`}
-                    <td>${r.description}</td>
-                    <td><span style="background:${pColor}; color:${r.priority === 'Sedang' ? '#000' : '#fff'}; padding:2px 8px; border-radius:10px; font-size:10px;">${r.priority}</span></td>
-                    <td><b style="color:${r.status === 'Pending' ? '#f39c12' : '#27ae60'}">${r.status}</b></td>
-                    <td>
-                        <div style="display:flex; gap:5px;">
-                            <button onclick="openChat(${r.id})" style="background:#0C3B72; color:white; padding:5px 10px; border:none; border-radius:4px; cursor:pointer; font-size:11px;">Chat</button>
-                            ${role === 'pusat' && r.status === 'Pending' ? `<button onclick="done(${r.id})" style="background:#27ae60; color:white; padding:5px 10px; border:none; border-radius:4px; cursor:pointer; font-size:11px;">Selesai</button>` : ''}
+                    <td data-label="ID">#${r.id}</td>
+                    ${role === 'pusat' ? 
+                        `<td data-label="Unit"><b>${r.location}</b><br><small>${r.name}</small></td>` : 
+                        `<td data-label="Tanggal">${r.created_at}</td>`
+                    }
+                    <td data-label="Gangguan">${r.description}</td>
+                    <td data-label="Prioritas"><span style="background:${pColor}; color:${r.priority === 'Sedang' ? '#000' : '#fff'}; padding:2px 8px; border-radius:10px; font-size:10px; font-weight:bold;">${r.priority}</span></td>
+                    <td data-label="Status"><b style="color:${r.status === 'Pending' ? '#f39c12' : '#27ae60'}">${r.status}</b></td>
+                    <td data-label="Aksi">
+                        <div style="display:flex; gap:5px; width:100%;">
+                            <button onclick="openChat(${r.id})" style="background:#0C3B72; color:white; padding:8px 10px; border:none; border-radius:4px; cursor:pointer; font-size:11px; flex:1;">Chat</button>
+                            ${role === 'pusat' && r.status === 'Pending' ? `<button onclick="done(${r.id})" style="background:#27ae60; color:white; padding:8px 10px; border:none; border-radius:4px; cursor:pointer; font-size:11px; flex:1;">Selesai</button>` : ''}
                         </div>
                     </td>
                 </tr>`;
@@ -155,42 +158,32 @@ let chatInterval = null; // Gunakan null agar pengecekan lebih bersih
 
 function openChat(id) {
     currentId = id;
-    const displayId = document.getElementById('reportIdDisplay');
     const chatSec = document.getElementById('chatSection');
+    const displayId = document.getElementById('reportIdDisplay');
     
     if (displayId) displayId.innerText = id;
-    if (chatSec) chatSec.style.display = 'block';
     
-    // 1. Langsung load chat saat diklik
+    // Pake display block, nanti CSS Media Query yang urus jadi Flex di HP
+    if (chatSec) chatSec.style.display = 'block'; 
+    
     loadChat();
 
-    // 2. Set Interval agar chat refresh otomatis setiap 2 detik
-    // Kita bersihkan dulu interval lama supaya tidak tumpang tindih (double)
     if (chatInterval) clearInterval(chatInterval);
-    
     chatInterval = setInterval(() => {
-        // Cek apakah kotak chat masih terbuka
-        const isVisible = document.getElementById('chatSection').style.display === 'block';
+        const isVisible = chatSec && chatSec.style.display !== 'none';
         if (isVisible) {
             loadChat(); 
         } else {
-            // Jika chat ditutup (display: none), matikan intervalnya
             clearInterval(chatInterval);
             chatInterval = null;
         }
-    }, 2000); // 2 detik sekali ngecek server
+    }, 2000);
 
-    // 3. Fokus kursor ke input
+    // Focus input biar user bisa langsung ngetik
     setTimeout(() => {
         const input = document.getElementById('chatInput');
         if (input) input.focus();
-    }, 200);
-}
-
-// WAJIB: Fungsi untuk stop nge-cek server pas chat ditutup
-function closeChat() {
-    document.getElementById('chatSection').style.display = 'none';
-    clearInterval(chatInterval);
+    }, 300);
 }
 
 // Tambahkan fungsi ini buat matiin timer pas chat ditutup (biar gak berat)

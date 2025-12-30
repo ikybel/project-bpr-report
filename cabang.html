@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Cabang - BPR NTB</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
@@ -76,14 +76,22 @@
         </div>
     </div>
 
-    <div id="chatSection" class="box" style="display:none; position: fixed; bottom: 0; right: 100px; width: 350px; z-index: 101;">
-        <h4>Chat Laporan #<span id="reportIdDisplay"></span></h4>
-        <div id="chatBox" class="chat-box" style="height: 200px;"></div>
-        <div style="display:flex; gap:5px; margin-top:5px;">
-            <input id="chatInput" placeholder="Ketik balasan...">
-            <button onclick="sendChat()" style="width:auto;">Kirim</button>
+    <div id="chatSection">
+        <div class="chat-container">
+            <div class="chat-header">
+                <strong>Chat Laporan #<span id="reportIdDisplay"></span></strong>
+                <span onclick="closeChat()" style="cursor:pointer; font-size:20px;">X</span>
+            </div>
+            <div id="chatBox">
+                </div>
+            <div class="chat-footer">
+                <input type="text" id="chatInput" placeholder="Ketik balasan..." autocomplete="off">
+                <button class="btn-kirim" onclick="sendChat()">Kirim</button>
+            </div>
+            <div style="text-align:center; padding-bottom: 10px;">
+                <button onclick="closeChat()" style="color:red; background:none; border:none; cursor:pointer; font-size:13px;">Tutup Chat</button>
+            </div>
         </div>
-        <button onclick="document.getElementById('chatSection').style.display='none'" style="background:none; color:red; border:none; cursor:pointer; width:100%; font-size:12px;">Tutup Chat</button>
     </div>
 
 <script src="assets/js/app.js"></script>

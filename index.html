@@ -6,13 +6,93 @@
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-<div class="box" style="max-width:400px; margin: 100px auto; text-align: center;">
-    <h2 style="color:#0C3B72;">Login IT Helpdesk</h2>
-    <p>PT BPR NTB (Perseroda)</p>
-    <hr>
-    <input type="email" id="email" placeholder="Masukkan Email Kantor (@bprntb.co.id)" required>
-    <button onclick="handleLogin()" style="margin-top:10px;">Masuk</button>
-    <p id="msg" style="color:red; margin-top:10px; font-size: 14px;"></p>
+
+<style>
+    /* Reset & Center Wrapper */
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh; /* Full tinggi layar */
+        background-color: #f4f7f6; /* Warna bg tipis biar box putihnya kelihatan */
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .box {
+        background: white;
+        width: 100%;
+        max-width: 400px; /* Di desktop tetep 400px */
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .box h2 {
+        margin-top: 0;
+        font-size: 24px;
+    }
+
+    /* Input Biar Gak Sempit di HP */
+    .box input {
+        width: 100%;
+        padding: 12px 15px;
+        margin-top: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px; /* WAJIB 16px biar HP gak auto-zoom */
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    .box input:focus {
+        border-color: #0C3B72;
+    }
+
+    /* Tombol Login */
+    .box button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 20px;
+        background-color: #0C3B72;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .box button:hover {
+        background-color: #092d56;
+    }
+
+    /* Responsive buat HP kecil */
+    @media screen and (max-width: 480px) {
+        .box {
+            padding: 20px;
+        }
+        .box h2 {
+            font-size: 20px;
+        }
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="box">
+        <h2 style="color:#0C3B72;">Login IT Helpdesk</h2>
+        <p style="color: #666; font-size: 14px;">PT BPR NTB (Perseroda)</p>
+        <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+        
+        <input type="email" id="email" placeholder="Masukkan Email Kantor (@bprntb.co.id)" required>
+        
+        <button onclick="handleLogin()">Masuk</button>
+        
+        <p id="msg" style="color:red; margin-top:15px; font-size: 14px; min-height: 20px;"></p>
+    </div>
 </div>
 
 <script>
