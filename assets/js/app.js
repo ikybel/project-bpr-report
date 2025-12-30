@@ -30,11 +30,15 @@ if (document.readyState === 'loading') {
 
 // Handler Form (Khusus Halaman Cabang)
 document.addEventListener('DOMContentLoaded', () => {
+    // 1. Jalankan load data otomatis saat halaman dibuka
+    loadData();
+
+    // 2. Logika Submit Laporan (Hanya akan jalan di Cabang karena Pusat tidak punya reportForm)
     const reportForm = document.getElementById('reportForm');
     if (reportForm) {
         reportForm.onsubmit = async (e) => {
             e.preventDefault();
-            const loc = localStorage.getItem('loc'); // Ambil loc terbaru
+            const loc = localStorage.getItem('loc'); 
             
             const payload = {
                 location: loc,
@@ -57,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     alert('Laporan berhasil terkirim!');
                     e.target.reset();
                     if (typeof toggleModal === 'function') toggleModal(false);
-                    loadData();
+                    loadData(); 
                 } else {
                     alert('Gagal: ' + result.message);
                 }
@@ -66,6 +70,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
     }
+
+    // 3. Logika Kirim Chat pakai ENTER (Berlaku untuk Pusat & Cabang)
+    // Kita gunakan delegasi event supaya lebih aman
+    document.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const activeEl = document.activeElement;
+            // Cek apakah yang lagi diketik adalah input chat
+            if (activeEl && activeEl.id === 'chatInput') {
+                e.preventDefault(); // Biar gak bikin baris baru di input
+                sendChat();
+            }
+        }
+    });
 });
 
 // === 2. FUNGSI LOAD DATA (PUSAT & CABANG) ===
@@ -134,17 +151,52 @@ async function loadData() {
 }
 
 // === 3. FUNGSI CHAT ===
-async function openChat(id) {
-    currentId = id;
-    const section = document.getElementById('chatSection');
-    if (section) section.style.display = 'block';
-    
-    const display = document.getElementById('reportIdDisplay');
-    if (display) display.innerText = id;
+let chatInterval = null; // Gunakan null agar pengecekan lebih bersih
 
+function openChat(id) {
+    currentId = id;
+    const displayId = document.getElementById('reportIdDisplay');
+    const chatSec = document.getElementById('chatSection');
+    
+    if (displayId) displayId.innerText = id;
+    if (chatSec) chatSec.style.display = 'block';
+    
+    // 1. Langsung load chat saat diklik
     loadChat();
-    if (chatTimer) clearInterval(chatTimer);
-    chatTimer = setInterval(loadChat, 2000); 
+
+    // 2. Set Interval agar chat refresh otomatis setiap 2 detik
+    // Kita bersihkan dulu interval lama supaya tidak tumpang tindih (double)
+    if (chatInterval) clearInterval(chatInterval);
+    
+    chatInterval = setInterval(() => {
+        // Cek apakah kotak chat masih terbuka
+        const isVisible = document.getElementById('chatSection').style.display === 'block';
+        if (isVisible) {
+            loadChat(); 
+        } else {
+            // Jika chat ditutup (display: none), matikan intervalnya
+            clearInterval(chatInterval);
+            chatInterval = null;
+        }
+    }, 2000); // 2 detik sekali ngecek server
+
+    // 3. Fokus kursor ke input
+    setTimeout(() => {
+        const input = document.getElementById('chatInput');
+        if (input) input.focus();
+    }, 200);
+}
+
+// WAJIB: Fungsi untuk stop nge-cek server pas chat ditutup
+function closeChat() {
+    document.getElementById('chatSection').style.display = 'none';
+    clearInterval(chatInterval);
+}
+
+// Tambahkan fungsi ini buat matiin timer pas chat ditutup (biar gak berat)
+function closeChat() {
+    document.getElementById('chatSection').style.display = 'none';
+    clearInterval(chatInterval);
 }
 
 async function loadChat() {

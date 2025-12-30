@@ -13,41 +13,47 @@
         </div>
     </header>
 
-<div class="box">
-    <h3>Daftar Gangguan Masuk</h3>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Asal Cabang</th>
-                <th>Deskripsi Gangguan</th> <th>Prioritas</th>
-                <th>Status</th>
-                <th>Aksi</th>
-            </tr>
-        </thead>
-        <tbody id="tableBody">
-            </tbody>
-    </table>
-</div>
-
-    <div id="chatSection" class="box" style="display:none; border-top: 4px solid #0C3B72;">
-        <h3>Obrolan Laporan #<span id="reportIdDisplay"></span></h3>
-        <div id="chatBox" class="chat-box"></div>
-        <div style="display:flex; gap:10px; margin-top:10px;">
-            <input id="chatInput" placeholder="Ketik pesan balasan...">
-            <button onclick="sendChat()" style="width:100px;">Kirim</button>
+<div class="container" style="padding: 20px;">
+        <div class="box">
+            <h3>Semua Laporan Masuk</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Lokasi & Pelapor</th>
+                        <th>Gangguan</th>
+                        <th>Status</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody> </table>
+            <div id="pagination"></div>
         </div>
     </div>
 
-    <script src="assets/js/app.js"></script>
-    <script>
-        function logout() { localStorage.clear(); window.location.href = 'index.html'; }
-        // Override openChat untuk menampilkan ID di teks
-        const originalOpenChat = openChat;
-        openChat = (id) => {
-            document.getElementById('reportIdDisplay').innerText = id;
-            originalOpenChat(id);
-        }
-    </script>
+    <div id="chatSection" class="box" style="display:none; position: fixed; bottom: 0; right: 100px; width: 350px; z-index: 101;">
+        <h4>Chat Laporan #<span id="reportIdDisplay"></span></h4>
+        <div id="chatBox" class="chat-box" style="height: 200px;"></div>
+        <div style="display:flex; gap:5px; margin-top:5px;">
+            <input id="chatInput" placeholder="Ketik balasan...">
+            <button onclick="sendChat()" style="width:auto;">Kirim</button>
+        </div>
+        <button onclick="document.getElementById('chatSection').style.display='none'" style="background:none; color:red; border:none; cursor:pointer; width:100%; font-size:12px;">Tutup Chat</button>
+    </div>
+
+<script src="assets/js/app.js"></script>
+<script>
+    const role = localStorage.getItem('role');
+    if (role !== 'pusat') window.location.href = 'index.html';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadData(); 
+    });
+
+    function logout() { 
+        localStorage.clear(); 
+        window.location.href = 'index.html'; 
+    }
+</script>
 </body>
 </html>
